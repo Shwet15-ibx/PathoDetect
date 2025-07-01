@@ -1,0 +1,4 @@
+# Ignore dataset and data files
+BreaKHis_v1/
+Folds.csv
+data/ 

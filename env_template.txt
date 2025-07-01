@@ -1,0 +1,33 @@
+# LangChain and LLM Configuration
+LANGCHAIN_API_KEY=your_langchain_api_key_here
+GROQ_API_KEY=your_groq_api_key_here
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+LANGCHAIN_PROJECT=pathodetect
+
+# MLOps and Experiment Tracking
+MLFLOW_TRACKING_URI=http://localhost:5000
+WANDB_API_KEY=your_wandb_api_key_here
+WANDB_PROJECT=pathodetect
+
+# Model Configuration
+MODEL_DEVICE=cuda  # or cpu
+BATCH_SIZE=32
+PATCH_SIZE=224
+OVERLAP_RATIO=0.5
+
+# Data Paths
+DATA_RAW_PATH=./data/raw
+DATA_PROCESSED_PATH=./data/processed
+DATA_ANNOTATIONS_PATH=./data/annotations
+MODELS_PATH=./models/saved
+
+# Application Settings
+STREAMLIT_SERVER_PORT=8501
+STREAMLIT_SERVER_ADDRESS=localhost
+DEBUG_MODE=false
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=8000
+CORS_ORIGINS=["http://localhost:8501", "http://127.0.0.1:8501"] 

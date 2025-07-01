@@ -1,0 +1,170 @@
+# PathoDetect+ Configuration File
+
+# Model Configuration
+models:
+  resnet:
+    name: "resnet50"
+    pretrained: true
+    num_classes: 2
+    dropout_rate: 0.5
+    learning_rate: 0.001
+    # weights_path: "./models/weights/resnet50_best.pth"  # Uncomment and set to use custom weights
+    
+  efficientnet:
+    name: "efficientnet_b4"
+    pretrained: true
+    num_classes: 2
+    dropout_rate: 0.3
+    learning_rate: 0.0005
+    # weights_path: "./models/weights/efficientnet_b4_best.pth"  # Uncomment and set to use custom weights
+    
+  ensemble:
+    models: ["resnet", "efficientnet"]
+    weights: [0.6, 0.4]
+    voting_method: "soft"
+
+# Image Processing
+image_processing:
+  patch_size: 224
+  overlap_ratio: 0.5
+  normalization:
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+  augmentation:
+    rotation: 15
+    horizontal_flip: true
+    vertical_flip: false
+    brightness: 0.1
+    contrast: 0.1
+
+# Training Configuration
+training:
+  batch_size: 32
+  num_epochs: 100
+  early_stopping_patience: 10
+  learning_rate_scheduler: "cosine"
+  weight_decay: 0.0001
+  gradient_clipping: 1.0
+
+# Inference Configuration
+inference:
+  batch_size: 64
+  confidence_threshold: 0.5
+  nms_threshold: 0.3
+  max_patches_per_image: 1000
+
+# BreaKHis Dataset Configuration
+dataset:
+  name: "BreaKHis"
+  data_root: "./BreaKHis_v1"
+  folds_csv: "./Folds.csv"
+  default_fold: 1
+  default_magnification: "100"
+  available_magnifications: ["40", "100", "200", "400"]
+  available_folds: [1, 2, 3, 4, 5]
+  
+  preprocessing:
+    target_size: [224, 224]
+    batch_size: 32
+    num_workers: 4
+    pin_memory: true
+    
+  augmentation:
+    train:
+      horizontal_flip: true
+      rotation: 15
+      color_jitter: true
+      brightness: 0.1
+      contrast: 0.1
+    val:
+      horizontal_flip: false
+      rotation: 0
+      color_jitter: false
+
+# LLM Configuration
+llm:
+  model_name: "llama3-8b-8192"
+  temperature: 0.7
+  max_tokens: 1000
+  system_prompt: |
+    You are a medical AI assistant specializing in histopathology analysis. 
+    Provide clear, accurate, and clinically relevant explanations of pathology findings.
+  report_template: |
+    ## Histopathology Analysis Report
+    
+    **Patient Information:**
+    - Image ID: {image_id}
+    - Analysis Date: {date}
+    
+    **Findings:**
+    {findings}
+    
+    **Confidence Score:** {confidence}
+    
+    **Recommendations:**
+    {recommendations}
+
+# MLOps Configuration
+mlops:
+  tracking:
+    experiment_name: "pathodetect"
+    run_name: "cancer_detection"
+    log_artifacts: true
+    log_metrics: true
+    
+  metrics:
+    primary: ["f1_score", "auc"]
+    secondary: ["precision", "recall", "accuracy"]
+    visualization: ["overlay_accuracy", "patch_confidence"]
+    
+  model_registry:
+    registry_uri: "sqlite:///mlruns.db"
+    model_name: "pathodetect_cancer_classifier"
+
+# Visualization Configuration
+visualization:
+  heatmap:
+    colormap: "RdYlBu_r"
+    alpha: 0.7
+    min_confidence: 0.3
+    
+  patches:
+    grid_size: [5, 5]
+    show_confidence: true
+    highlight_cancerous: true
+    
+  reports:
+    include_heatmap: true
+    include_patches: true
+    include_statistics: true
+
+# Data Configuration
+data:
+  supported_formats: [".tif", ".tiff", ".svs", ".ndpi", ".jpg", ".png"]
+  max_file_size_mb: 500
+  cache_dir: "./cache"
+  temp_dir: "./temp"
+  
+  preprocessing:
+    resize_large_images: true
+    max_dimension: 4096
+    compression_quality: 95
+
+# Application Configuration
+app:
+  title: "PathoDetect+: Histopathology Image Classifier"
+  description: "AI-powered cancer detection with LLM-assisted reporting"
+  theme:
+    primary_color: "#FF6B6B"
+    secondary_color: "#4ECDC4"
+    background_color: "#F7F7F7"
+    
+  features:
+    enable_upload: true
+    enable_batch_processing: true
+    enable_report_generation: true
+    enable_model_comparison: true
+    enable_breakhis_dataset: true
+    enable_model_training: true
+    enable_advanced_analytics: true
+    enable_model_deployment: true 
